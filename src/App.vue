@@ -1,30 +1,40 @@
 <template>
   <div>  
+
     <h1>Reaction Timer Game</h1>
     <h3> Test your reaction speed!</h3>
-    <button @click="startgame" :disabled="isPlaying" >Play!</button>
+    <button @click="startgame" :disabled="isPlaying">Play!</button>
+
+  </div>
+
+<div>   
+
+  <Results v-if="gameEnded" :score="score"/>
+  <Block v-if="isPlaying" :delay="delay" @endG="endGame"/>
+
 
 </div>
-<div>   
-  <Block v-if="isPlaying" :delay="delay"/>
-</div>
- 
+
 </template>
 
 <script>
 import Block from './components/Block.vue'
+import Results from './components/Results.vue'
 
 export default {
   name: 'App',
-  components: { Block},
+  components: { Block, Results},
   data () {
     return {
       isPlaying: false,
-      delay: null
+      delay: null,
+      score: null,
+      gameEnded: false
     }
   },
   methods: {
     startgame() {
+      this.gameEnded = false
       this.isPlaying = !this.isPlaying
       this.timer()
       console.log(this.delay)    
@@ -32,6 +42,12 @@ export default {
     timer() {
       this.delay = 1000 + Math.random() * 8000
 
+    },
+    endGame(reactionTime) {
+      this.score = reactionTime
+      this.isPlaying = !this.isPlaying
+      console.log('Handled innit')
+      this.gameEnded = true
     }
   }
 }
